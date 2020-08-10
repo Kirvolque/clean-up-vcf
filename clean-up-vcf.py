@@ -34,7 +34,7 @@ def pairs_for_keys(info: Dict[str, str], keys: List[str]) -> map:
     return map(lambda key: to_pair(key if key in info else None, info.get(key)), keys)
 
 
-def filter_row(row: Dict[str, str], keys: List[str]) -> dict:
+def filter_row(row: Dict[str, str], keys: List[str]) -> Dict[str, str]:
     row.update({INFO: ";".join(filter(lambda pair: pair, (pairs_for_keys(parse_info(row[INFO]), keys))))})
     return row
 

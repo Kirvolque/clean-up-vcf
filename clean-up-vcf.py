@@ -6,9 +6,7 @@ CHROM = "#CHROM"
 INFO = "INFO"
 
 
-def run():
-    file_path = args.vcf
-    info_fields = args.info_fields
+def run(file_path: str, info_fields: List[str]) -> None:
     with open(file_path, "r") as input_file:
         fields, header = read_header(input_file)
         reader = csv.DictReader(input_file, delimiter='\t', fieldnames=fields)
@@ -68,4 +66,4 @@ if __name__ == "__main__":
     parser.add_argument('-i', "--info", action=StoreInfoFields, dest='info_fields', nargs="+",
                         help="List of INFO fields. ", required=True)
     args = parser.parse_args()
-    run()
+    run(args.vcf, args.info_fields)

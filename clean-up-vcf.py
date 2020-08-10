@@ -16,8 +16,8 @@ def run(file_path: str, info_fields: List[str]) -> None:
             print(dict_to_line(filter_row(row, info_fields), fields))
 
 
-def parse_info(pairs: str) -> Dict[str, str]:
-    return dict(map(lambda field: split(field), pairs.split(";")))
+def parse_info(info_content: str) -> Dict[str, str]:
+    return dict(map(lambda field: split(field), info_content.split(";")))
 
 
 def split(field: str) -> Tuple[str, str]:

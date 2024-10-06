@@ -1,11 +1,11 @@
 import csv
 import argparse
-from typing import List, Tuple, Dict, Optional, Generator
+from typing import Tuple, Optional, Generator
 
 CHROM = "#CHROM"
 INFO = "INFO"
 
-def parse_info(info_content: str) -> Dict[str, str]:
+def parse_info(info_content: str) -> dict[str, str]:
     """Parses the INFO field from VCF into a dictionary of key-value pairs."""
     return {
         k: v
@@ -22,22 +22,22 @@ def to_pair(key: str, value: Optional[str]) -> str:
     """Formats a key-value pair into 'key=value', or just 'key' if value is None."""
     return f"{key}={value}" if key and value else key
 
-def get_info_pair_for_key(info: Dict[str, str], key: str) -> Optional[str]:
+def get_info_pair_for_key(info: dict[str, str], key: str) -> Optional[str]:
     """Retrieves a formatted pair for a given key if it exists in the info dictionary."""
     return to_pair(key, info.get(key)) if key in info else None
 
-def filter_info(info: Dict[str, str], keys: List[str]) -> Generator[str, None, None]:
+def filter_info(info: dict[str, str], keys: list[str]) -> Generator[str, None, None]:
     """Yields filtered info pairs for the given list of keys."""
     for key in keys:
         pair = get_info_pair_for_key(info, key)
         if pair:
             yield pair
 
-def dict_to_line(row: Dict[str, str], fields: List[str]) -> str:
+def dict_to_line(row: dict[str, str], fields: list[str]) -> str:
     """Converts a dictionary row into a VCF-formatted line."""
     return "\t".join(row[field] for field in fields)
 
-def read_header(input_file) -> Tuple[List[str], List[str]]:
+def read_header(input_file) -> tuple[list[str], list[str]]:
     """Reads the VCF header and extracts the fields."""
     line, header = "", []
     while not line.startswith(CHROM):
@@ -46,7 +46,7 @@ def read_header(input_file) -> Tuple[List[str], List[str]]:
     fields = [field.strip() for field in line.split("\t")]
     return fields, header
 
-def run(file_path: str, info_fields: List[str]) -> None:
+def run(file_path: str, info_fields: list[str]) -> None:
     """Main function to run the VCF processing pipeline."""
     with open(file_path, "r") as input_file:
         fields, header = read_header(input_file)

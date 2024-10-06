@@ -12,7 +12,9 @@ def run(file_path: str, info_fields: List[str]) -> None:
         for header_line in header:
             print(header_line, end="")
         for row in reader:
-            print(dict_to_line(filter_row(row, info_fields), fields))
+            filtered_info = filter_info(row, info_fields)
+            row[INFO] = ";".join(filtered_info)
+            print(dict_to_line(row, fields))
 
 def parse_info(info_content: str) -> Dict[str, str]:
     return {
@@ -31,12 +33,10 @@ def to_pair(key: str, value: str) -> str:
 def pairs_for_keys(info: Dict[str, str], keys: List[str]) -> List[str]:
     return [to_pair(key if key in info else None, info.get(key)) for key in keys]
 
-def filter_row(row: Dict[str, str], keys: List[str]) -> Dict[str, str]:
-    row[INFO] = ";".join(pair for pair in pairs_for_keys(parse_info(row[INFO]), keys) if pair)
-    return row
+def filter_info(row: Dict[str, str], keys: List[str]) -> List[str]:
+    return [pair for pair in pairs_for_keys(parse_info(row[INFO]), keys) if pair]
 
 def dict_to_line(row: Dict[str, str], fields: List[str]) -> str:
-    # Using a list comprehension to replace map and lambda
     return "\t".join(row[field] for field in fields)
 
 def read_header(input_file) -> Tuple[List[str], List[str]]:

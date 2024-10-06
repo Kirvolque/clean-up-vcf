@@ -1,6 +1,6 @@
 import csv
 import argparse
-from typing import List, Tuple, Dict, Optional
+from typing import List, Tuple, Dict, Optional, Generator
 
 CHROM = "#CHROM"
 INFO = "INFO"
@@ -12,7 +12,8 @@ def run(file_path: str, info_fields: List[str]) -> None:
         for header_line in header:
             print(header_line, end="")
         for row in reader:
-            filtered_info = filter_info(row, info_fields)
+            info = parse_info(row[INFO])
+            filtered_info = filter_info(info, info_fields)
             row[INFO] = ";".join(filtered_info)
             print(dict_to_line(row, fields))
 
@@ -30,11 +31,14 @@ def split(field: str) -> Tuple[str, Optional[str]]:
 def to_pair(key: str, value: str) -> str:
     return f"{key}={value}" if key and value else key
 
-def pairs_for_keys(info: Dict[str, str], keys: List[str]) -> List[str]:
-    return [to_pair(key if key in info else None, info.get(key)) for key in keys]
+def pair_for_key(info: Dict[str, str], key: str) -> Optional[str]:
+    return to_pair(key, info.get(key)) if key in info else None
 
-def filter_info(row: Dict[str, str], keys: List[str]) -> List[str]:
-    return [pair for pair in pairs_for_keys(parse_info(row[INFO]), keys) if pair]
+def filter_info(info: Dict[str, str], keys: List[str]) -> Generator[str, None, None]:
+    for key in keys:
+        pair = pair_for_key(info, key)
+        if pair:
+            yield pair
 
 def dict_to_line(row: Dict[str, str], fields: List[str]) -> str:
     return "\t".join(row[field] for field in fields)

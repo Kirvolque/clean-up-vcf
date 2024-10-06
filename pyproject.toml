@@ -10,7 +10,7 @@ readme = "README.md"
 python = ">=3.9"
 
 [tool.poetry.scripts]
-clean-up-vcf = "clean-up-vcf:main"
+clean-up-vcf = "clean_up_vcf:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

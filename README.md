@@ -17,7 +17,7 @@ python3 clean_up_vcf.py --vcf input.vcf --info AC AN_nfe_est faf95 > output.vcf
 This command will remove all INFO fields from input.vcf except for AC, AN_nfe_est, and faf95, and will write the result to output.vcf.
 
 # Requirements
-To use clean-up-vcf, you need Python 3.9 or higher installed on your system.
+To use clean-up-vcf, you need Python 3.10 or higher installed on your system.
 
 # License
 This script is licensed under the MIT License. See LICENSE for more information.

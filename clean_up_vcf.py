@@ -1,6 +1,6 @@
 import csv
 import argparse
-from typing import Tuple, Optional, Generator
+from typing import Generator
 
 CHROM = "#CHROM"
 INFO = "INFO"
@@ -14,15 +14,15 @@ def parse_info(info_content: str) -> dict[str, str]:
         )
     }
 
-def split(field: str) -> Tuple[str, Optional[str]]:
+def split(field: str) -> tuple[str, str | None]:
     """Splits a field by '=' if present, otherwise returns the field as a key with None value."""
     return (field, None) if "=" not in field else tuple(field.split("="))
 
-def to_pair(key: str, value: Optional[str]) -> str:
+def to_pair(key: str, value: str | None) -> str:
     """Formats a key-value pair into 'key=value', or just 'key' if value is None."""
     return f"{key}={value}" if key and value else key
 
-def get_info_pair_for_key(info: dict[str, str], key: str) -> Optional[str]:
+def get_info_pair_for_key(info: dict[str, str], key: str) -> str | None:
     """Retrieves a formatted pair for a given key if it exists in the info dictionary."""
     return to_pair(key, info.get(key)) if key in info else None
 

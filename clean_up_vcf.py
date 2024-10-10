@@ -2,8 +2,8 @@ import csv
 import argparse
 from typing import Generator
 
-CHROM = "#CHROM"
-INFO = "INFO"
+VCF_HEADER_CHROM = "#CHROM"
+VCF_INFO_FIELD = "INFO"
 
 def parse_info(info_content: str) -> dict[str, str]:
     """Parses the INFO field from VCF into a dictionary of key-value pairs."""
@@ -40,7 +40,7 @@ def dict_to_line(row: dict[str, str], fields: list[str]) -> str:
 def read_header(input_file) -> tuple[list[str], list[str]]:
     """Reads the VCF header and extracts the fields."""
     line, header = "", []
-    while not line.startswith(CHROM):
+    while not line.startswith(VCF_HEADER_CHROM):
         line = input_file.readline()
         header.append(line)
     fields = [field.strip() for field in line.split("\t")]
@@ -54,9 +54,9 @@ def run(file_path: str, info_fields: list[str]) -> None:
         for header_line in header:
             print(header_line, end="")
         for row in reader:
-            info = parse_info(row[INFO])
+            info = parse_info(row[VCF_INFO_FIELD])
             filtered_info = filter_info(info, info_fields)
-            row[INFO] = ";".join(filtered_info)
+            row[VCF_INFO_FIELD] = ";".join(filtered_info)
             print(dict_to_line(row, fields))
 
 
